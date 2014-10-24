@@ -8,4 +8,3 @@ def write_file(file, data):
         file_object.writelines(data)
     finally:
         file_object.close()
-
