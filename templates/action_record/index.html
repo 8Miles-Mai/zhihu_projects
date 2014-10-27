@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>GM_data_finder</title>
+    {% load staticfiles %}
+    <script src="{% static "js/jquery-1.8.3.min.js" %}"></script>
+    <script language="javascript" type="text/javascript">
+        function query_info(selectValue) {
+            if(selectValue === 'None') {
+                var queryInfo = $('#queryInfo');
+                queryInfo.html("");
+                return;
+            }
+            var htmlUrl = '/action_record/' + selectValue;
+            $.ajax({
+                url: htmlUrl,
+                type: 'GET',
+                success: function(data) {
+                    var queryInfo = $('#queryInfo');
+                    queryInfo.html("");
+                    if(data == null) {
+                        queryInfo.html("找不到该html页面");
+                    } else {
+                        queryInfo.append(data);
+                    }
+                },
+                async: true
+            });
+        }
+    </script>
+</head>
+<body>
+    <div>
+        <form>
+            <p><input type="button" onclick="query_info('data')" value="data" /></p>
+        </form>
+    </div>
+
+    <div id="queryInfo">
+
+    </div>
+</body>
+</html>

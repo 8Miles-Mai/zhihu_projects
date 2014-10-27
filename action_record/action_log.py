@@ -4,7 +4,7 @@ from uuid import uuid1
 
 
 class action_log:
-    user_id = 0
+    user_id = ''
     action_detail = ''
     time_line = ''
     uuid = None
@@ -18,7 +18,7 @@ class action_log:
         self.uuid = uuid
 
     def to_string(self):
-        print("user_id=%s, action_detail=%s, time_line=%s, uuid=%s" % (self.user_id, self.action_detail, self.time_line, self.uuid))
+        print("user_id=%s, action_detail=%s, time_line=%s, uuid=%s --" % (self.user_id, self.action_detail, self.time_line, self.uuid))
 
     def is_valid(self):
         result = False

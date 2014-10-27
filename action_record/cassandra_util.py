@@ -2,7 +2,7 @@ __author__ = 'miles'
 
 from pycassa.pool import ConnectionPool
 from pycassa.columnfamily import ColumnFamily
-from action_log import action_log
+import action_log
 
 CASS_KEY_SPACE = 'cassandra_zhihu'
 CASS_URL = 'localhost:9160'
@@ -12,6 +12,7 @@ __cass_pool = None
 
 def get_cassandra_column_family(column_family):
     try:
+        global __cass_pool
         if __cass_pool is None:
             __cass_pool = ConnectionPool(CASS_KEY_SPACE, [CASS_URL])
         if column_family is None:
@@ -24,11 +25,11 @@ def get_cassandra_column_family(column_family):
 
 def get_action_record_by_user_id(user_id):
     try:
-        if user_id is None or user_id <= 0:
+        if user_id is None or user_id <= 0 or len(str(user_id)) <= 0:
             result = None
         else:
             col_fam = get_cassandra_column_family(None)
-            result = col_fam.get(user_id)
+            result = col_fam.get(str(user_id))
     except Exception, e:
         result = None
         print(e)
@@ -41,8 +42,9 @@ def insert_action_record(data):
         else:
             col_fam = get_cassandra_column_family(None)
             for item in data:
-                if item is action_log and item.is_valid():
-                    col_fam.insert(item.user_id, {(str(item.time_line) + str(item.uuid)) : item.action_detail})
+                if isinstance(item, action_log.action_log) and item.is_valid():
+                    print(str(item.user_id))
+                    col_fam.insert(str(item.user_id), {(str(item.time_line), str(item.uuid)) : str(item.action_detail)})
             result = True
     except Exception, e:
         result = False
