@@ -31,6 +31,7 @@ def get_action_record_by_user_id(user_id, start, end):
         else:
             r = get_redis_Redis()
             result = r.zrevrange('zhihu:'+str(user_id), start=start, end=end)
+            print result
     except Exception, e:
         result = None
         print(e)
@@ -47,7 +48,7 @@ def set_item_anonymity(user_id, item_id):
             while cursor <> 0:
                 if cursor == -1:
                     cursor = 0
-                item = r.zscan('zhihu:'+str(user_id), cursor, match='*-'+str(item_id)+'--*')
+                item = r.zscan('zhihu:'+str(user_id), cursor, match='*-'+str(item_id)+'__*')
                 for record in item[1]:
                     # print record
                     items.append(record)
@@ -75,7 +76,7 @@ def unset_item_anonymity(user_id, item_id):
             while cursor <> 0:
                 if cursor == -1:
                     cursor = 0
-                item = r.zscan('zhihu:'+str(user_id)+':'+str(item_id), cursor, match='*-'+str(item_id)+'--*')
+                item = r.zscan('zhihu:'+str(user_id)+':'+str(item_id), cursor, match='*-'+str(item_id)+'__*')
                 for record in item[1]:
                     items.append(record)
                 cursor = item[0]

@@ -4,7 +4,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>GM_data_finder</title>
+    <title>zhihu_action_record</title>
     {% load staticfiles %}
     <script src="{% static "js/jquery-1.8.3.min.js" %}"></script>
     <script language="javascript" type="text/javascript">
@@ -15,6 +15,17 @@
                 return;
             }
             var htmlUrl = '/action_record/' + selectValue;
+            var user_id, start, end, item_id;
+            if(selectValue === 'query_data') {
+                user_id = $('#action_record input[name="user_id"]').val();
+                start = $('#action_record input[name="start"]').val();
+                end = $('#action_record input[name="end"]').val();
+                htmlUrl += '?user_id=' + user_id + '&start=' + start + '&end=' + end;
+            } else if(selectValue === 'set_anonymity' || selectValue === 'unset_anonymity' ) {
+                user_id = $('#action_record input[name="user_id"]').val();
+                item_id = $('#action_record input[name="item_id"]').val();
+                htmlUrl += '?user_id=' + user_id + '&item_id=' + item_id;
+            }
             $.ajax({
                 url: htmlUrl,
                 type: 'GET',
@@ -34,11 +45,24 @@
 </head>
 <body>
     <div>
-        <form>
-            <p><input type="button" onclick="query_info('data')" value="data" /></p>
+        <form id="action_record" name="action_record">
+            <p><input type="button" onclick="query_info('create_file')" value="创建随机数据到文本文件--test_data.txt" /></p>
+            <p><input type="button" onclick="query_info('read_file')" value="从文本文件--test_data.txt--读取测试数据到cassandra" /></p>
+            <p>
+                <input type="text" placeholder="输入用户user_id" id="user_id" name="user_id" onkeyup="value=value.replace(/[^\d]/g,'')"
+                       onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,''))" />
+                <input type="text" placeholder="请求数据开始start" id="start" name="start" onkeyup="value=value.replace(/[^\d]/g,'')"
+                       onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,''))" />
+                <input type="text" placeholder="请求数据结束end" id="end" name="end" onkeyup="value=value.replace(/[^\d]/g,'')"
+                       onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,''))" />
+                <input type="text" placeholder="输入item_id" id="item_id" name="item_id" onkeyup="value=value.replace(/[^\d]/g,'')"
+                       onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,''))" />
+            </p>
+            <p><input type="button" onclick="query_info('query_data')" value="根据user_id查询用户近期动态" /></p>
+            <p><input type="button" onclick="query_info('set_anonymity')" value="设置item_id为匿名状态" /></p>
+            <p><input type="button" onclick="query_info('unset_anonymity')" value="取消item_id的匿名状态" /></p>
         </form>
     </div>
-
     <div id="queryInfo">
 
     </div>

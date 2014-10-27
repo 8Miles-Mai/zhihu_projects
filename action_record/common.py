@@ -70,14 +70,19 @@ def test_test():
     print os.path.join(BASE_DIR,  'templates/action_record/js/')
 
 def get_action_record(user_id, start, end):
-    record = None
+    print 11111
     if user_id is None or user_id <= 0 or len(str(user_id)) <= 0 or start is None or start < 0 or end is None or end < start:
-        result = None
+        record = None
+        print 222222
     else:
         record = redis_util.get_action_record_by_user_id(user_id, start, end)
-    if record is None:
+        print 333333
+    if record is None or len(record) <= 0:
+        print 44444444
         get_data_from_cass_to_redis(str(user_id))
+        print 555555
         record = redis_util.get_action_record_by_user_id(user_id, start, end)
+        print 666666
 
     result = record
     for item in record:
@@ -88,6 +93,7 @@ def set_item_anonymity(user_id, item_id):
     if user_id is None or user_id <= 0 or len(str(user_id)) <= 0 or item_id is None or item_id <= 0 or len(str(item_id)) <= 0:
         result = False
     else:
+        print '-1-'
         result = redis_util.set_item_anonymity(str(user_id), str(item_id))
     return result
 
