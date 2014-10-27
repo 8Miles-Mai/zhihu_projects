@@ -3,10 +3,7 @@ __author__ = 'miles'
 from pycassa.pool import ConnectionPool
 from pycassa.columnfamily import ColumnFamily
 import action_log
-
-CASS_KEY_SPACE = 'cassandra_zhihu'
-CASS_URL = 'localhost:9160'
-CASS_COLUMN_FAMILY = 'action_record'
+import env
 
 __cass_pool = None
 
@@ -14,9 +11,9 @@ def get_cassandra_column_family(column_family):
     try:
         global __cass_pool
         if __cass_pool is None:
-            __cass_pool = ConnectionPool(CASS_KEY_SPACE, [CASS_URL])
+            __cass_pool = ConnectionPool(env.CASS_KEY_SPACE, [env.CASS_URL])
         if column_family is None:
-            column_family = CASS_COLUMN_FAMILY
+            column_family = env.CASS_COLUMN_FAMILY
         cass_col_family = ColumnFamily(__cass_pool, column_family)
     except Exception, e:
         cass_col_family = None

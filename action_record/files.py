@@ -18,6 +18,7 @@ def read_file(file):
     try:
         input_file = open(file)
         for line in input_file:
+            line = line.replace('\n', '')
             data.append(line)
     except Exception, e:
         print e

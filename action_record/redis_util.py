@@ -3,10 +3,7 @@ __author__ = 'miles'
 from redis import ConnectionPool
 from redis import Redis
 import action_log
-
-REDIS_HOST = 'localhost'
-REDIS_PORT = 6379
-REDIS_DB = 0
+import env
 
 __redis_pool = None
 __redis_Redis = None
@@ -15,7 +12,7 @@ def get_redis_Redis():
     try:
         global __redis_pool, __redis_Redis
         if __redis_pool is None:
-            __redis_pool = ConnectionPool(host=REDIS_HOST, port=REDIS_PORT, db=REDIS_DB)
+            __redis_pool = ConnectionPool(host=env.REDIS_HOST, port=env.REDIS_PORT, db=env.REDIS_DB)
         if __redis_Redis is None:
             __redis_Redis = Redis(connection_pool=__redis_pool)
     except Exception, e:
@@ -48,9 +45,8 @@ def set_item_anonymity(user_id, item_id):
             while cursor <> 0:
                 if cursor == -1:
                     cursor = 0
-                item = r.zscan('zhihu:'+str(user_id), cursor, match='*-'+str(item_id)+'__*')
+                item = r.zscan('zhihu:'+str(user_id), cursor, match='*-'+str(item_id)+'-*__*')
                 for record in item[1]:
-                    # print record
                     items.append(record)
                 cursor = item[0]
 
@@ -76,7 +72,7 @@ def unset_item_anonymity(user_id, item_id):
             while cursor <> 0:
                 if cursor == -1:
                     cursor = 0
-                item = r.zscan('zhihu:'+str(user_id)+':'+str(item_id), cursor, match='*-'+str(item_id)+'__*')
+                item = r.zscan('zhihu:'+str(user_id)+':'+str(item_id), cursor, match='*-'+str(item_id)+'-*__*')
                 for record in item[1]:
                     items.append(record)
                 cursor = item[0]
