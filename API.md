@@ -1,6 +1,18 @@
 env.py
 =====
      环境配置文件
+     1. cassandra_setting
+         CASS_KEY_SPACE：cassandra数据库的keyspace
+         CASS_URL：cassandra数据库的url
+         CASS_COLUMN_FAMILY：记录列族名
+
+     2. redis_setting
+         REDIS_HOST：Redis数据库Host
+         REDIS_PORT：Redis服务端口号
+         REDIS_DB：Redis存储的数据库号
+
+     3. file_setting
+         TEST_DATA_FILE_PATH：测试数据文件的全路径***/***/**.txt
 
 view.py
 ======

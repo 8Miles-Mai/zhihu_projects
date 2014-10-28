@@ -14,5 +14,3 @@ REDIS_DB = 0
 
 # file_setting
 TEST_DATA_FILE_PATH = '/Users/miles/PycharmProjects/zhihu_projects/action_record/test_data.txt'
-FILE_USER_NAME='miles.mai'
-FILE_USER_PASSWORD='zhihu'
