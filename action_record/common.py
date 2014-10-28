@@ -8,6 +8,7 @@ from action_log import action_log
 import cassandra_util
 import redis_util
 import env
+import json
 
 def create_data_file(user_num, user_record_num):
     if user_num is None or user_num <= 0:
@@ -46,7 +47,6 @@ def init_data_for_test(file):
 
     user_list = list(set(user_ids))
     for user_id in user_list:
-        print user_id
         redis_util.delete_action_log(user_id, None, 'user_itemall')
         redis_util.delete_action_log(user_id, None, None)
 
@@ -86,7 +86,9 @@ def get_action_record(user_id, start, end):
         detail = (record.split('__')[0]).split('-')
         item = action_log(user_id=str(detail[0]), action_id=str(detail[1]), item_id=str(detail[2]), time_line=str(detail[3]), uuid=None)
         result.append(item.convert_to_dict())
-    return result
+
+    json_result = json.dumps(result, indent=4)
+    return json_result
 
 def set_item_anonymity(user_id, item_id):
     if user_id is None or user_id <= 0 or len(str(user_id)) <= 0 or item_id is None or item_id <= 0 or len(str(item_id)) <= 0:

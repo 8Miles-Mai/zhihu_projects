@@ -3,7 +3,6 @@ from django.http import HttpResponse
 from urlparse import urlparse, parse_qs
 import common
 import env
-import json
 
 def index(request):
     return render_to_response('action_record/index.html', None)
@@ -32,8 +31,7 @@ def query_user_action_record(request):
     start = params['start'][0]
     end = params['end'][0]
     result = common.get_action_record(user_id, start, end)
-    json_result = json.dumps(result, indent=4)
-    return HttpResponse(json_result)
+    return HttpResponse(result)
 
 def set_item_anonymity(request):
     url = request.get_full_path()

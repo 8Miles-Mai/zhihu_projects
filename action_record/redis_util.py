@@ -28,7 +28,6 @@ def get_action_record_by_user_id(user_id, start, end):
         else:
             r = get_redis_Redis()
             result = r.zrevrange('zhihu:'+str(user_id), start=start, end=end)
-            print result
     except Exception, e:
         result = None
         print(e)

@@ -40,7 +40,6 @@ def insert_action_record(data):
             col_fam = get_cassandra_column_family(None)
             for item in data:
                 if isinstance(item, action_log.action_log) and item.is_valid():
-                    print(str(item.user_id))
                     col_fam.insert(str(item.user_id), {(str(item.time_line), str(item.uuid)) : str(item.action_detail)})
             result = True
     except Exception, e:
