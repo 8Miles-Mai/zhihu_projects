@@ -36,11 +36,19 @@ def init_data_for_test(file):
         return False
     data = read_file(file)
     record_list = []
+    user_ids = []
     for line in data:
         detail = str(line).split('-')
         if len(detail) == 4:
             record = action_log(user_id=str(detail[0]), action_id=str(detail[1]), item_id=str(detail[2]), time_line=str(detail[3]), uuid=None)
             record_list.append(record)
+            user_ids.append(str(detail[0]))
+
+    user_list = list(set(user_ids))
+    for user_id in user_list:
+        print user_id
+        redis_util.delete_action_log(user_id, None, 'user_itemall')
+        redis_util.delete_action_log(user_id, None, None)
 
     cassandra_util.insert_action_record(record_list)
     return True
@@ -84,6 +92,9 @@ def set_item_anonymity(user_id, item_id):
     if user_id is None or user_id <= 0 or len(str(user_id)) <= 0 or item_id is None or item_id <= 0 or len(str(item_id)) <= 0:
         result = False
     else:
+        flag = redis_util.get_action_record_by_user_id(str(user_id), 0, 1)
+        if flag is None or len(flag) <= 0:
+            get_data_from_cass_to_redis(str(user_id))
         result = redis_util.set_item_anonymity(str(user_id), str(item_id))
     return result
 

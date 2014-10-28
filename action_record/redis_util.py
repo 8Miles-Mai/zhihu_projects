@@ -104,3 +104,37 @@ def insert_action_log(data):
         result = False
         print(e)
     return result
+
+def delete_action_log(user_id, item_id, value_match):
+    if user_id is None or len(str(user_id)) <= 0:
+        return False
+    if item_id is None or len(str(item_id)) <= 0:
+        key = ':'.join(['zhihu', str(user_id)])
+    else:
+        key = ':'.join(['zhihu', str(user_id), str(item_id)])
+
+    if value_match is not None and str(value_match) == 'user_itemall':
+        key = ':'.join(['zhihu', str(user_id), '*'])
+        value_match = None
+    try:
+        r = get_redis_Redis()
+        items = []
+        keys = r.keys(key)
+        for key in keys:
+            cursor = -1
+            while cursor <> 0:
+                if cursor == -1:
+                    cursor = 0
+                item = r.zscan(key, cursor, match=value_match)
+                for record in item[1]:
+                    items.append(record)
+                cursor = item[0]
+        pipe = r.pipeline()
+        for item in items:
+            pipe.zrem(key, item[0])
+        pipe.execute()
+        result = True
+    except Exception, e:
+        print e
+        result = False
+    return result
